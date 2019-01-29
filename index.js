@@ -14,8 +14,8 @@ const getFinishedRecordings = async () => {
 };
 
 const main = async () => {
-  const result = await getFinishedRecordings();
-  const files = JSON.parse(result);
+  const result = JSON.parse(await getFinishedRecordings());
+  const files = result.entries.map((video) => video.filename);
   console.log("OK");
 };
 
