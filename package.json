@@ -8,7 +8,10 @@
   },
   "author": "Oliver Kötter",
   "license": "GPL-3.0",
-  "engines" : {
+  "devDependencies": {
+    "eslint": "^5.12.1"
+  },
+  "engines": {
     "node": "~10.15.1",
     "npm": "~6.4.1"
   },
