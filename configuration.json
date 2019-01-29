@@ -1,0 +1,6 @@
+{
+  "tvheadend_server": "192.168.1.4",
+  "tvheadend_port": 9981,
+  "tvheadend_login": "user",
+  "tvheadend_password": "password",
+}
