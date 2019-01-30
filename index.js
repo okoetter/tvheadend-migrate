@@ -1,5 +1,6 @@
 const
   configuration = require("./configuration.json"),
+  path = require("path"),
   request = require("request-promise");
 
 const getFinishedRecordings = async () => {
@@ -15,7 +16,7 @@ const getFinishedRecordings = async () => {
 
 const main = async () => {
   const result = JSON.parse(await getFinishedRecordings());
-  const files = result.entries.map((video) => video.filename);
+  const files = result.entries.map((video) => path.basename(video.filename));
   console.log("OK");
 };
 
