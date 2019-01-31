@@ -16,8 +16,8 @@ const getFinishedRecordings = async () => {
 };
 
 const getFilesToImport = () => {
-  const allFiles = fs.readdirSync(configuration.source_video_files_folder);
-  return allFiles.filter((element) => element.match(configuration.source_regex_video_files));
+  const allFiles = fs.readdirSync(configuration.source_video_files_folder, { withFileTypes: true });
+  return allFiles.filter((element) => element.isFile() && element.name.match(configuration.source_regex_video_files));
 };
 
 const main = async () => {
