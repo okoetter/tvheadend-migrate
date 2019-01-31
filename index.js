@@ -1,6 +1,7 @@
 const
   configuration = require("./configuration.json"),
   path = require("path"),
+  fs = require("fs"),
   request = require("request-promise");
 
 const getFinishedRecordings = async () => {
@@ -14,9 +15,15 @@ const getFinishedRecordings = async () => {
   }
 };
 
+const getFilesToImport = () => {
+  const allFiles = fs.readdirSync(configuration.source_video_files_folder);
+  return allFiles.filter((element) => element.match(configuration.source_regex_video_files));
+};
+
 const main = async () => {
   const result = JSON.parse(await getFinishedRecordings());
-  const files = result.entries.map((video) => path.basename(video.filename));
+  const filesInDb = result.entries.map((video) => path.basename(video.filename));
+  const filesToImport = getFilesToImport();
   console.log("OK");
 };
 

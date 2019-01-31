@@ -3,4 +3,6 @@
   "tvheadend_port": 9981,
   "tvheadend_login": "user",
   "tvheadend_password": "password",
+  "source_video_files_folder": "o:\\",
+  "source_regex_video_files": "\\.(ts|mkv)$"
 }
