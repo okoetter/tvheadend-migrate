@@ -15,15 +15,19 @@ const getFinishedRecordings = async () => {
   }
 };
 
-const getFilesToImport = () => {
+const getFilesToImport = (filesInDb) => {
   const allFiles = fs.readdirSync(configuration.source_video_files_folder, { withFileTypes: true });
-  return allFiles.filter((element) => element.isFile() && element.name.match(configuration.source_regex_video_files));
+  const filterFiles = allFiles.filter((element) => element.isFile() && element.name.match(configuration.source_regex_video_files));
+
+  // return the difference of all found files - those already in database
+  return filterFiles.filter((element) => filesInDb.indexOf(element.name) < 0);
 };
 
 const main = async () => {
   const result = JSON.parse(await getFinishedRecordings());
   const filesInDb = result.entries.map((video) => path.basename(video.filename));
-  const filesToImport = getFilesToImport();
+  const filesToImport = getFilesToImport(filesInDb);
+
   console.log("OK");
 };
 
