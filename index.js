@@ -14,6 +14,7 @@ const getFinishedRecordings = async () => {
   }
   catch (error) {
     console.error("Error contacting the tvheadend API. Check your configuration.json file.");
+    console.error(error);
     return Promise.reject(error);
   }
 };
