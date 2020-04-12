@@ -27,10 +27,26 @@ const getFilesToImport = (tvhFiles) => {
   return filterFiles.filter((element) => tvhFiles.indexOf(element.name) < 0);
 };
 
+const writeCSV = (filesToImport) => {
+  const fs = require("fs");
+  return new Promise((resolve, reject) => {
+    const file = fs.createWriteStream(path.join(__dirname, configuration.output_csv_file));
+    
+    // write header
+    file.write("filename\r\n");
+    for (const row of filesToImport) {
+      file.write(row.name + "\r\n"); 
+    }
+    file.end();   
+    file.on("finish", () => { resolve(true); });
+  });
+};
+
 (async () => {
   const finishedTvhRecordings = await getFinishedRecordings();
   const tvhFiles = finishedTvhRecordings.entries.map((video) => path.basename(video.filename));
   const filesToImport = getFilesToImport(tvhFiles);
+  await writeCSV(filesToImport);
 
   console.log("OK");
 })();
