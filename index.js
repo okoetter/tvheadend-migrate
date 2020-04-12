@@ -27,12 +27,11 @@ const getFilesToImport = (tvhFiles) => {
   return filterFiles.filter((element) => tvhFiles.indexOf(element.name) < 0);
 };
 
-const main = async () => {
+(async () => {
   const finishedTvhRecordings = await getFinishedRecordings();
   const tvhFiles = finishedTvhRecordings.entries.map((video) => path.basename(video.filename));
   const filesToImport = getFilesToImport(tvhFiles);
 
   console.log("OK");
-};
+})();
 
-main();
