@@ -19,18 +19,18 @@ const getFinishedRecordings = async () => {
   }
 };
 
-const getFilesToImport = (filesInDb) => {
+const getFilesToImport = (tvhFiles) => {
   const allFiles = fs.readdirSync(configuration.source_video_files_folder, { withFileTypes: true });
   const filterFiles = allFiles.filter((element) => element.isFile() && element.name.match(configuration.source_regex_video_files));
 
   // return the difference of all found files - those already in database
-  return filterFiles.filter((element) => filesInDb.indexOf(element.name) < 0);
+  return filterFiles.filter((element) => tvhFiles.indexOf(element.name) < 0);
 };
 
 const main = async () => {
-  const result = await getFinishedRecordings();
-  const filesInDb = result.entries.map((video) => path.basename(video.filename));
-  const filesToImport = getFilesToImport(filesInDb);
+  const finishedTvhRecordings = await getFinishedRecordings();
+  const tvhFiles = finishedTvhRecordings.entries.map((video) => path.basename(video.filename));
+  const filesToImport = getFilesToImport(tvhFiles);
 
   console.log("OK");
 };
