@@ -21,23 +21,23 @@ const getFinishedRecordings = async () => {
 
 const getFilesToImport = (tvhFiles) => {
   const allFiles = fs.readdirSync(configuration.source_video_files_folder, { withFileTypes: true });
-  const filterFiles = allFiles.filter((element) => element.isFile() && element.name.match(configuration.source_regex_video_files));
-
-  // return the difference of all found files - those already in database
-  return filterFiles.filter((element) => tvhFiles.indexOf(element.name) < 0);
+  return allFiles
+    .filter((element) => element.isFile() && element.name.match(configuration.source_regex_video_files)) // only files which name matches config
+    .filter(element => tvhFiles.indexOf(element.name) < 0) // only files that are not already in tvh db
+    .map(element => element.name); // return only name property
 };
 
 const writeCSV = (filesToImport) => {
   const fs = require("fs");
   return new Promise((resolve, reject) => {
     const file = fs.createWriteStream(path.join(__dirname, configuration.output_csv_file));
-    
+
     // write header
     file.write("filename\r\n");
     for (const row of filesToImport) {
-      file.write(row.name + "\r\n"); 
+      file.write(row + "\r\n");
     }
-    file.end();   
+    file.end();
     file.on("finish", () => { resolve(true); });
   });
 };
