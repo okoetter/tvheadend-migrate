@@ -1,13 +1,16 @@
+// beginning with tvheadend 4.3 you need to set authentication mode to "plain" or "Both plain and digest"
+// in Base settings/HTTP Server SEttings (Expert view level only)
+
 const
   configuration = require("./configuration.json"),
   path = require("path"),
   fs = require("fs"),
-  request = require("request-promise");
+  axios = require("axios");
 
 const getFinishedRecordings = async () => {
   try {
-    const response = await request(`http://${configuration.tvheadend_login}:${configuration.tvheadend_password}@${configuration.tvheadend_server}:${configuration.tvheadend_port}/api/dvr/entry/grid_finished?limit=1000000`);
-    return Promise.resolve(response);
+    const response = await axios.get(`http://${configuration.tvheadend_login}:${configuration.tvheadend_password}@${configuration.tvheadend_server}:${configuration.tvheadend_port}/api/dvr/entry/grid_finished?limit=1000000`);
+    return Promise.resolve(response.data);
   }
   catch (error) {
     console.error("Error contacting the tvheadend API. Check your configuration.json file.");
@@ -24,7 +27,7 @@ const getFilesToImport = (filesInDb) => {
 };
 
 const main = async () => {
-  const result = JSON.parse(await getFinishedRecordings());
+  const result = await getFinishedRecordings();
   const filesInDb = result.entries.map((video) => path.basename(video.filename));
   const filesToImport = getFilesToImport(filesInDb);
 
