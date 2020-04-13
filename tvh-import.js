@@ -33,9 +33,9 @@ const writeCSV = (filesToImport) => {
     const file = fs.createWriteStream(path.join(__dirname, configuration.csv_file));
 
     // write header
-    file.write("filename\r\n");
-    for (const row of filesToImport) {
-      file.write(row + "\r\n");
+    file.write("filename\tfile length\ttitle\tchannel name\tstart time\tstop time\r\n");
+    for (const filename of filesToImport) {
+      file.write(filename + "\r\n");
     }
     file.end();
     file.on("finish", () => { resolve(true); });
