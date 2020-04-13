@@ -70,9 +70,13 @@ const importTest = async () => {
   const finishedTvhRecordings = await getFinishedRecordings();
   const tvhFiles = finishedTvhRecordings.entries.map((video) => path.basename(video.filename));
   const filesToImport = getFilesToImport(tvhFiles);
-  await writeCSV(filesToImport);
+  
+  // if csv file exists then import
+  if (fs.existsSync(path.join(__dirname, configuration.csv_file)))
+    await importTest();
+  else // create csv file
+    await writeCSV(filesToImport);
 
-  await importTest();
   console.log("OK");
 })();
 
