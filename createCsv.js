@@ -42,12 +42,37 @@ const writeCSV = (filesToImport) => {
   });
 };
 
+const importTest = async () => {
+  const postdata = { 
+    // "enabled": true, 
+    "start": 1509000000, 
+    "stop":  1509003600, 
+    "channelname": "Das Erste HD test", 
+    "title": { "ger": "my title node 2" }, 
+    // "subtitle": { "ger": "filename: my video" }, 
+    // "description": { "ger": "my description" }, 
+    // "comment": "added by tvh_addfile.py", 
+    "files": [ { "filename": "/recordings/das-aktuelle-sportstudio-ZDF-HD2020-04-04_23-00.ts" } ] 
+  };
+
+  try {
+    const response = await axios.post(`http://${configuration.tvheadend_login}:${configuration.tvheadend_password}@${configuration.tvheadend_server}:${configuration.tvheadend_port}/api/dvr/entry/create`, `conf=${JSON.stringify(postdata)}`);
+    return Promise.resolve(response.data);
+  }
+  catch (error) {
+    console.error("Error contacting the tvheadend API. Check your configuration.json file.");
+    console.error(error);
+    return Promise.reject(error);
+  }
+};
+
 (async () => {
   const finishedTvhRecordings = await getFinishedRecordings();
   const tvhFiles = finishedTvhRecordings.entries.map((video) => path.basename(video.filename));
   const filesToImport = getFilesToImport(tvhFiles);
   await writeCSV(filesToImport);
 
+  await importTest();
   console.log("OK");
 })();
 
