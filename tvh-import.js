@@ -27,15 +27,27 @@ const getFilesToImport = (tvhFiles) => {
     .map(element => element.name); // return only name property
 };
 
-const writeCSV = (filesToImport) => {
+const getVideoDurations = async (files) => {
+  const result = [];
+  const { getVideoDurationInSeconds } = require("get-video-duration");
+
+  for (const filename of files) {
+    const duration = await getVideoDurationInSeconds(path.join(configuration.source_video_files_folder, filename))
+    result.push(Math.round(duration));    
+  }
+
+  return result;
+};
+
+const writeCSV = (filesToImport, durations) => {
   const fs = require("fs");
   return new Promise((resolve, reject) => {
     const file = fs.createWriteStream(path.join(__dirname, configuration.csv_file));
 
     // write header
-    file.write("filename\tfile length\ttitle\tchannel name\tstart time\tstop time\r\n");
-    for (const filename of filesToImport) {
-      file.write(filename + "\r\n");
+    file.write("filename\tduration\ttitle\tchannel name\tstart time\tstop time\r\n");
+    for (let i = 0; i < filesToImport.length; i++) {
+      file.write(`${filesToImport[i]}\t${durations[i]}\r\n`);
     }
     file.end();
     file.on("finish", () => { resolve(true); });
@@ -74,8 +86,10 @@ const importTest = async () => {
   // if csv file exists then import
   if (fs.existsSync(path.join(__dirname, configuration.csv_file)))
     await importTest();
-  else // create csv file
-    await writeCSV(filesToImport);
+  else { // create csv file
+    const durations = await getVideoDurations(filesToImport);
+    await writeCSV(filesToImport, durations);
+  }
 
   console.log("OK");
 })();
