@@ -30,7 +30,7 @@ const getFilesToImport = (tvhFiles) => {
 const writeCSV = (filesToImport) => {
   const fs = require("fs");
   return new Promise((resolve, reject) => {
-    const file = fs.createWriteStream(path.join(__dirname, configuration.output_csv_file));
+    const file = fs.createWriteStream(path.join(__dirname, configuration.csv_file));
 
     // write header
     file.write("filename\r\n");
