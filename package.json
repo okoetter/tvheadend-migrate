@@ -16,7 +16,7 @@
     "npm": "~6.4.1"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "get-video-duration": "^1.0.3",
     "moment": "^2.25.3"
   }
