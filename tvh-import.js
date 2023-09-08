@@ -33,8 +33,14 @@ const getVideoDurations = async (files) => {
   const { getVideoDurationInSeconds } = require("get-video-duration");
 
   for (const filename of files) {
-    const duration = await getVideoDurationInSeconds(path.join(configuration.script_source_video_files_folder, filename))
-    result.push(Math.round(duration));    
+    try {
+      const duration = await getVideoDurationInSeconds(path.join(configuration.source_video_files_folder, filename));
+      result.push(Math.round(duration));
+    }
+    catch(e) {
+      console.log(`Error in file: ${filename}`, e);
+      result.push("unknown");
+    }
   }
 
   return result;
