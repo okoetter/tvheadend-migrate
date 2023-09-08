@@ -1,0 +1,3 @@
+- authenticaton type in tvheadend under Configuration/General/Base must be set to plain while using this script
+- date/time format in 5th column in csv must be ISO 8601 (YYYY-MM-DDTHH:mm:ssZ)
+- before processing the csv be sure that it is tab separated and its encoding is UTF-8 - especially if it was saved by Microsoft Excel.
