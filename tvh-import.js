@@ -21,9 +21,9 @@ const getFinishedRecordings = async () => {
 };
 
 const getFilesToImport = (tvhFiles) => {
-  const allFiles = fs.readdirSync(configuration.script_source_video_files_folder, { withFileTypes: true });
+  const allFiles = fs.readdirSync(configuration.source_video_files_folder, { withFileTypes: true });
   return allFiles
-    .filter((element) => element.isFile() && element.name.match(configuration.script_source_regex_video_files)) // only files which name matches config
+    .filter((element) => element.isFile() && element.name.match(configuration.source_regex_video_files)) // only files which name matches config
     .filter(element => !tvhFiles.includes(element.name)) // only files that are not already in tvh db
     .map(element => element.name); // return only name property
 };
@@ -105,7 +105,7 @@ const sendToApi = async (tvhFiles) => {
       if (parts.length >= 5) {
         if (tvhFiles.includes(parts[0])) continue;
         const filename = path.join(configuration.tvheadend_recordings_folder, parts[0]);
-        if (fs.existsSync(path.join(configuration.script_source_video_files_folder, parts[0]))) {
+        if (fs.existsSync(path.join(configuration.source_video_files_folder, parts[0]))) {
           const startTime = moment(parts[4]);
           const endTime = startTime
             .clone()
