@@ -69,7 +69,7 @@ const readCSV = async () => {
     input: fs.createReadStream(path.join(__dirname, configuration.csv_file)),
     crlfDelay: Infinity
   });
-  
+
   let firstRow = true;
   let result = [];
   for await (const line of rl) {
@@ -81,28 +81,28 @@ const readCSV = async () => {
 };
 
 const sendToApi = async (tvhFiles) => {
-  /*const postdata = { 
-    // "enabled": true, 
-    "start": 1509000000, 
-    "stop":  1509003600, 
-    "channelname": "Das Erste HD test", 
-    "title": { "ger": "my title node 2" }, 
-    // "subtitle": { "ger": "filename: my video" }, 
-    // "description": { "ger": "my description" }, 
-    // "comment": "added by tvh_addfile.py", 
-    "files": [ { "filename": "/recordings/Tagesschau - --Das Erste HD2020-04-1220-00.ts" } ] 
+  /*const postdata = {
+    // "enabled": true,
+    "start": 1509000000,
+    "stop":  1509003600,
+    "channelname": "Das Erste HD test",
+    "title": { "ger": "my title node 2" },
+    // "subtitle": { "ger": "filename: my video" },
+    // "description": { "ger": "my description" },
+    // "comment": "added by tvh_addfile.py",
+    "files": [ { "filename": "/recordings/Tagesschau - --Das Erste HD2020-04-1220-00.ts" } ]
   };*/
   let lines = [];
   try {
-    lines = await readCSV();   
+    lines = await readCSV();
   }
   catch (error) {
     console.error(`Error reading ${configuration.csv_file}.`);
     console.error(error);
-    return  
+    return
   }
 
-  moment().format(); 
+  moment().format();
   //const test = await axios.post(`http://${configuration.tvheadend_login}:${configuration.tvheadend_password}@${configuration.tvheadend_server}:${configuration.tvheadend_port}/api/dvr/entry/remove`, "uuid=3e3710a0c612d9a9325d1e2fb389a2fe");
 
   try {
@@ -118,7 +118,7 @@ const sendToApi = async (tvhFiles) => {
             .add(Number(parts[1]), "seconds")
             .subtract(configuration.pre_recording_padding_minutes, "minutes")
             .subtract(configuration.post_recording_padding_minutes, "minutes");
-          
+
           const postdata = {
             "start": startTime.unix(),
             "start_extra": configuration.pre_recording_padding_minutes,
@@ -153,7 +153,7 @@ const sendToApi = async (tvhFiles) => {
   const finishedTvhRecordings = await getFinishedRecordings();
   const tvhFiles = finishedTvhRecordings.entries.map((video) => path.basename(video.filename));
   const filesToImport = getFilesToImport(tvhFiles);
-  
+
   // if csv file exists then import
   if (fs.existsSync(path.join(__dirname, configuration.csv_file)))
     await sendToApi(tvhFiles);
