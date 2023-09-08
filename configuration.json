@@ -5,6 +5,7 @@
   "tvheadend_password": "password",
   "source_video_files_folder": "o:\\",
   "source_regex_video_files": "\\.(ts|mkv)$",
+  "tvheadend_recordings_folder": "/recordings/",
   "csv_file": "source_files.csv",
   "country": "ger",
   "pre_recording_padding_minutes": 5,
