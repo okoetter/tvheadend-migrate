@@ -105,12 +105,15 @@ const sendToApi = async (tvhFiles) => {
   moment().format();
   //const test = await axios.post(`http://${configuration.tvheadend_login}:${configuration.tvheadend_password}@${configuration.tvheadend_server}:${configuration.tvheadend_port}/api/dvr/entry/remove`, "uuid=3e3710a0c612d9a9325d1e2fb389a2fe");
 
-  try {
-    for (const line of lines) {
+
+  for (const line of lines) {
+    let filename = "";
+    try {
       const parts = line.split("\t");
       if (parts.length >= 5) {
         if (tvhFiles.includes(parts[0])) continue;
-        const filename = path.join(configuration.tvheadend_recordings_folder, parts[0]);
+        filename = path.join(configuration.tvheadend_recordings_folder, parts[0]);
+        filename = filename.split(path.sep).join("/"); // replace \ with / under Windows
         if (fs.existsSync(path.join(configuration.source_video_files_folder, parts[0]))) {
           const startTime = moment(parts[4]);
           const endTime = startTime
@@ -141,11 +144,11 @@ const sendToApi = async (tvhFiles) => {
         }
       }
     }
-  }
-  catch (error) {
-    console.error("Error contacting the tvheadend API. Check your configuration.json file.");
-    console.error(error);
-    console.error(error.config.data)
+    catch (error) {
+      console.error(`Error adding ${filename}`);
+      console.error(error);
+      console.error(error.config.data)
+    }
   }
 };
 
